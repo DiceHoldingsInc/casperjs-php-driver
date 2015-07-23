@@ -19,6 +19,9 @@ class CasperJsDriver
     /** @var string */
     protected $script = '';
 
+    /** @var array */
+    protected $options = [];
+
     public function __construct()
     {
         $this->script .= <<<FRAGMENT
@@ -60,4 +63,17 @@ casper.then(function() {
         return new Output($output);
     }
 
+    public function addOption($optionName, $value)
+    {
+        $this->options[$optionName] = $value;
+
+        return $this;
+    }
+
+    public function useProxy($proxy)
+    {
+        $this->addOption('proxy', $proxy);
+
+        return $this;
+    }
 }

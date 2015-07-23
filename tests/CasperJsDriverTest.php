@@ -42,4 +42,12 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $output->getStatusCode());
     }
 
+    public function testDriverShouldUseProxy()
+    {
+        $driver = new CasperJsDriver();
+
+        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+                         ->useProxy('1.1.1.1')
+                         ->run();
+    }
 }
