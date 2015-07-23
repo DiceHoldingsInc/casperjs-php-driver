@@ -18,8 +18,6 @@ class CasperJsDriver
 {
     /** @var string */
     protected $script = '';
-    /** @var  array */
-    protected $output = [];
 
     public function __construct()
     {
@@ -61,10 +59,10 @@ FRAGMENT;
         $filename = '/tmp/php-casperjs-driver';
         file_put_contents($filename, $this->script);
 
-        exec('casperjs ' . $filename, $this->output);
+        exec('casperjs ' . $filename, $output);
         unlink($filename);
 
-        return implode("\n", $this->output);
+        return new Output($output);
     }
 
 }
