@@ -4,3 +4,4 @@ composer.lock
 .buildpath
 .settings
 .idea
+*.swp
