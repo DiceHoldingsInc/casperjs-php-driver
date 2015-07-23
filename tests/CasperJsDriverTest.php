@@ -44,7 +44,11 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testDriverShouldUseProxy()
     {
-        $driver = new CasperJsDriver();
+        $driver = $this->getMockBuilder('CasperJs\Driver\CasperJsDriver')
+            ->setMethods(['addOption'])
+            ->getMock();
+        $driver->expects($this->atLeastOnce())
+            ->method('addOption');
 
         $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
                          ->useProxy('1.1.1.1')

@@ -19,11 +19,12 @@ class CasperJsDriver
     /** @var string */
     protected $script = '';
 
-    /** @var array */
-    protected $options = [];
+    /** @var OptionsCliBuilder */
+    protected $optionBuilder;
 
     public function __construct()
     {
+        $this->optionBuilder = new OptionsCliBuilder();
         $this->script .= <<<FRAGMENT
 var casper = require('casper').create({
   verbose: true,
@@ -57,7 +58,7 @@ casper.then(function() {
         $filename = '/tmp/php-casperjs-driver';
         file_put_contents($filename, $this->script);
 
-        exec('casperjs ' . $filename, $output);
+        exec('casperjs ' . $filename . $this->optionBuilder->build(), $output);
         unlink($filename);
 
         return new Output($output);
@@ -65,7 +66,7 @@ casper.then(function() {
 
     public function addOption($optionName, $value)
     {
-        $this->options[$optionName] = $value;
+        $this->optionBuilder->addOption($optionName, $value);
 
         return $this;
     }
