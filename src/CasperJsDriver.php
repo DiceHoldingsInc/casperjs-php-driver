@@ -75,8 +75,6 @@ FRAGMENT;
 
         exec('casperjs ' . $filename, $output);
         unlink($filename);
-        var_dump($output);
-        die();
 
         return new Output($output);
     }
