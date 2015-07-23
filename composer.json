@@ -1,0 +1,25 @@
+{
+    "name": "workdigital/casperjs-php-driver",
+    "description": "An improved general purpose PHP driver for CasperJS",
+    "require-dev": {
+        "phpunit/phpunit": "~4.4"
+    },
+    "authors": [
+        {
+            "name": "Jacopo Nardiello",
+            "email": "jacopo@workdigital.co.uk"
+        },
+        {
+            "name": "Fabrice Guéry",
+            "email": "fabrice@workdigital.co.uk"
+        }
+    ],
+    "require": {
+      "php": ">=5.4"
+    },
+    "autoload": {
+      "psr-4": {
+        "CasperJs\\Driver\\": "src/"
+      }
+    }
+}
