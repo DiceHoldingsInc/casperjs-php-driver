@@ -10,10 +10,27 @@ class OutputTest extends \PHPUnit_Framework_TestCase
     public function testOutputWillExtractHtml()
     {
         $casperOutput = [
-            "<!DOCTYPE html><html><head>",
+            Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
             "        <title>Simplest possible page</title>"
         ];
-        $expectedOutput = implode("\n", $casperOutput);
+
+        $expectedOutput = "<!DOCTYPE html><html><head>\n" .
+            "        <title>Simplest possible page</title>\n";
+        $output = new Output($casperOutput);
+
+        $this->assertEquals($expectedOutput, $output->getHtml());
+    }
+
+    public function testHtmlWillOnlyReturnPageContent()
+    {
+        $casperOutput = [
+            "[info] [phantom] Phantom is trolling me!",
+            Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
+            "        <title>Simplest possible page</title>",
+        ];
+
+        $expectedOutput = "<!DOCTYPE html><html><head>\n" .
+            "        <title>Simplest possible page</title>\n";
         $output = new Output($casperOutput);
 
         $this->assertEquals($expectedOutput, $output->getHtml());

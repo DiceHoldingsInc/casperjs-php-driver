@@ -44,4 +44,5 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(200, $output->getStatusCode());
     }
+
 }

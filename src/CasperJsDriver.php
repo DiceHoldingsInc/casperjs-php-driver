@@ -45,11 +45,11 @@ FRAGMENT;
 
     public function includeHtml()
     {
-        $this->script .= <<<FRAGMENT
+        $this->script .= "
 casper.then(function() {
-    this.echo(this.getHTML());
+    this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
 });
-FRAGMENT;
+";
 
         return $this;
     }
