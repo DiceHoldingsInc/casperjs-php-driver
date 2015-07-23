@@ -27,4 +27,9 @@ class Output
     {
         return implode("\n", $this->output);
     }
+
+    public function getStatusCode()
+    {
+
+    }
 }

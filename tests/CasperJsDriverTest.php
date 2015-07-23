@@ -18,4 +18,16 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\\CasperJs\\Driver\\Output', $output);
         $this->assertContains('Pizza with ketchup', $output->getHtml());
     }
+
+    public function testDriverShouldBeAbleToRetrieveStatusCode()
+    {
+        $driver = new CasperJsDriver();
+
+        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+            ->includeHtml()
+            ->includeStatusCode()
+            ->run();
+
+        $this->assertContains(200, $output->getStatusCode());
+    }
 }

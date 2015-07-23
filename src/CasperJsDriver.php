@@ -22,7 +22,10 @@ class CasperJsDriver
     public function __construct()
     {
         $this->script .= <<<FRAGMENT
-var casper = require('casper').create();
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug'
+});
 
 FRAGMENT;
 
@@ -51,6 +54,17 @@ FRAGMENT;
         return $this;
     }
 
+    public function includeStatusCode()
+    {
+        $this->script .= <<<FRAGMENT
+casper.then(function() {
+    this.echo(this.getPageContent());
+});
+FRAGMENT;
+
+        return $this;
+    }
+
     public function run()
     {
         $this->script .= <<<FRAGMENT
@@ -61,6 +75,8 @@ FRAGMENT;
 
         exec('casperjs ' . $filename, $output);
         unlink($filename);
+        var_dump($output);
+        die();
 
         return new Output($output);
     }
