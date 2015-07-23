@@ -25,26 +25,31 @@ class CasperJsDriver
     public function __construct()
     {
         $this->optionBuilder = new OptionsCliBuilder();
-        $this->script .= <<<FRAGMENT
+        $this->script .= "
 var casper = require('casper').create({
   verbose: true,
   logLevel: 'debug'
 });
 
-FRAGMENT;
+";
 
     }
 
     public function start($url, $options = null)
     {
         $options = json_encode($options);
-        $this->script .= <<<FRAGMENT
+        $this->script .= "
 casper.start().then(function() {
     this.open('$url', $options);
 });
-FRAGMENT;
+";
 
         return $this;
+    }
+
+    public function setUserAgent($userAgent)
+    {
+        $this->script .= "casper.userAgent('$userAgent');";
     }
 
     public function run()
