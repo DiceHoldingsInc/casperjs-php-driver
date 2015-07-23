@@ -30,23 +30,41 @@ FRAGMENT;
 
     }
 
-    public function run($url)
+    public function start($url, $options = null)
     {
+        $options = json_encode($options);
         $this->script .= <<<FRAGMENT
 casper.start().then(function() {
-    this.open('$url');
+    this.open('$url', $options);
 });
+FRAGMENT;
 
-casper.run();
+        return $this;
+    }
+
+    public function includeHtml()
+    {
+        $this->script .= <<<FRAGMENT
 casper.then(function() {
     this.echo(this.getHTML());
 });
+FRAGMENT;
+
+        return $this;
+    }
+
+    public function run()
+    {
+        $this->script .= <<<FRAGMENT
+casper.run();
 FRAGMENT;
         $filename = '/tmp/php-casperjs-driver';
         file_put_contents($filename, $this->script);
 
         exec('casperjs ' . $filename, $this->output);
         unlink($filename);
+
         return implode("\n", $this->output);
     }
+
 }

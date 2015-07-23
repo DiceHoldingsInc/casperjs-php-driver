@@ -10,8 +10,12 @@ class DriverTest extends \PHPUnit_Framework_TestCase
     public function testDriverWillLoadSimplePage()
     {
         $driver = new CasperJsDriver();
-        
-        $output = $driver->run('file://' . __DIR__ . '/fixtures/simpleHtml.html');
+
+        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+            ->includeHtml()
+            ->run();
         $this->assertContains('Pizza with ketchup', $output);
     }
+
+    
 }
