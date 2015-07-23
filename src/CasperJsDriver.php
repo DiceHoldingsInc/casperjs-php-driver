@@ -43,33 +43,14 @@ FRAGMENT;
         return $this;
     }
 
-    public function includeHtml()
+    public function run()
     {
         $this->script .= "
+casper.run();
 casper.then(function() {
     this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
 });
 ";
-
-        return $this;
-    }
-
-    public function includeStatusCode()
-    {
-        $this->script .= <<<FRAGMENT
-casper.then(function() {
-    this.echo(this.getPageContent());
-});
-FRAGMENT;
-
-        return $this;
-    }
-
-    public function run()
-    {
-        $this->script .= <<<FRAGMENT
-casper.run();
-FRAGMENT;
         $filename = '/tmp/php-casperjs-driver';
         file_put_contents($filename, $this->script);
 

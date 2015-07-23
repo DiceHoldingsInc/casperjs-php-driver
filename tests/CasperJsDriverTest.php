@@ -12,7 +12,6 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
         $driver = new CasperJsDriver();
 
         $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
-            ->includeHtml()
             ->run();
 
         $this->assertInstanceOf('\\CasperJs\\Driver\\Output', $output);
@@ -38,8 +37,6 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
                 '[info] [phantom] Done 3 steps in 1295ms',
             ]));
         $output = $driver->start('https://google.com')
-            ->includeHtml()
-            ->includeStatusCode()
             ->run();
 
         $this->assertEquals(200, $output->getStatusCode());
