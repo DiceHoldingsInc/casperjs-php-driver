@@ -22,6 +22,8 @@ class CasperJsDriver
     /** @var OptionsCliBuilder */
     protected $optionBuilder;
 
+    protected $jsInteraction;
+
     public function __construct()
     {
         $this->optionBuilder = new OptionsCliBuilder();
@@ -47,19 +49,13 @@ casper.start().then(function() {
         return $this;
     }
 
-    public function setUserAgent($userAgent)
-    {
-        $this->script .= "casper.userAgent('$userAgent');";
-    }
-
     public function run()
     {
         $this->script .= "
 casper.run();
 casper.then(function() {
     this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
-});
-";
+});";
         $filename = '/tmp/php-casperjs-driver';
         file_put_contents($filename, $this->script);
 
@@ -81,5 +77,73 @@ casper.then(function() {
         $this->addOption('proxy', $proxy);
 
         return $this;
+    }
+
+    public function setUserAgent($userAgent)
+    {
+        $this->script .= "casper.userAgent('$userAgent');";
+
+        return $this;
+    }
+
+    public function evaluate($script)
+    {
+        $this->script .= "
+casper.then(function() {
+    casper.evaluate(function() {
+        $script
+    });
+});";
+
+        return $this;
+    }
+
+    public function waitForSelector($selector, $timeout)
+    {
+        $this->script .= "
+casper.waitForSelector(
+    '$selector',
+    function () {
+        this.echo('found selector \"$selector\"');
+    },
+    function () {
+        this.echo('timeout occured');
+    },
+    $timeout
+);";
+
+        return $this;
+    }
+
+    public function setViewPort($width, $height)
+    {
+        $this->script .= "
+casper.then(function () {
+    this.viewport($width, $height);
+});";
+
+        return $this;
+    }
+
+    public function wait($timeout)
+    {
+        $this->script .= "
+casper.wait(
+    $timeout,
+    function () {
+        this.echo('timeout occured');
+    }
+);";
+        return $this;
+    }
+
+    /**
+     * Should only be used for testing purpose, until a "one day" refactor.
+     *
+     * @return string
+     */
+    public function getScript()
+    {
+        return $this->script;
     }
 }

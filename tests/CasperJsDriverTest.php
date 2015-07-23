@@ -54,4 +54,58 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
                          ->useProxy('1.1.1.1')
                          ->run();
     }
+
+    public function testUserAgentIsPresentInScript()
+    {
+        $expected = <<<FRAGRENT
+
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug'
+});
+
+casper.userAgent('AmericanPizzaiolo');
+casper.then(function() {
+    casper.evaluate(function() {
+        make me a pizza
+    });
+});
+casper.then(function () {
+    this.viewport(1024, 768);
+});
+casper.waitForSelector(
+    '.selector',
+    function () {
+        this.echo('found selector ".selector"');
+    },
+    function () {
+        this.echo('timeout occured');
+    },
+    30000
+);
+casper.wait(
+    10000,
+    function () {
+        this.echo('timeout occured');
+    }
+);
+FRAGRENT;
+
+        $driver = new CasperJsDriver();
+        $driver->setUserAgent('AmericanPizzaiolo')
+            ->evaluate('make me a pizza')
+            ->setViewPort(1024, 768)
+            ->waitForSelector('.selector', 30000)
+            ->wait(10000);
+        $this->assertEquals($expected, $driver->getScript());
+    }
+
+    public function testAddScript()
+    {
+        $driver = new CasperJsDriver();
+        $driver->evaluate('make me a pizza');
+        $this->assertContains('make me a pizza', $driver->getScript());
+    }
+
+
 }
