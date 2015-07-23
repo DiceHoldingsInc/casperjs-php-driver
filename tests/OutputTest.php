@@ -35,4 +35,19 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedOutput, $output->getHtml());
     }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testWillOutputExceptionForTimeout()
+    {
+        $casperOutput = [
+            "[info] [phantom] Phantom is trolling me!",
+            Output::TAG_TIMEOUT,
+            Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
+            "        <title>Simplest possible page</title>",
+        ];
+
+        $output = new Output($casperOutput);
+    }
 }

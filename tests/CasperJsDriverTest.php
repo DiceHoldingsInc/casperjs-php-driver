@@ -57,8 +57,7 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testUserAgentIsPresentInScript()
     {
-        $expected = <<<FRAGRENT
-
+        $expected = "
 var casper = require('casper').create({
   verbose: true,
   logLevel: 'debug'
@@ -76,20 +75,19 @@ casper.then(function () {
 casper.waitForSelector(
     '.selector',
     function () {
-        this.echo('found selector ".selector"');
+        this.echo('found selector \".selector\"');
     },
     function () {
-        this.echo('timeout occured');
+        this.echo('" . Output::TAG_TIMEOUT . "');
     },
     30000
 );
 casper.wait(
     10000,
     function () {
-        this.echo('timeout occured');
+        this.echo('" . Output::TAG_TIMEOUT . "');
     }
-);
-FRAGRENT;
+);";
 
         $driver = new CasperJsDriver();
         $driver->setUserAgent('AmericanPizzaiolo')
@@ -107,5 +105,15 @@ FRAGRENT;
         $this->assertContains('make me a pizza', $driver->getScript());
     }
 
-
+    /**
+     * @expectedException \Exception
+     */
+    public function testCrawlerShouldThrowExceptionWhenTimingOut()
+    {
+        $driver = new CasperJsDriver();
+        
+        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+            ->waitForSelector('.some-non-existent-selector', 100)
+            ->run();
+    }
 }

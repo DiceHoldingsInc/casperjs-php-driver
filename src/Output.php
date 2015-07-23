@@ -19,6 +19,7 @@ class Output
     const TAG_INFO_PHANTOMJS = '[info] [phantom]';
     const TAG_PAGE_CONTENT = '[PAGE_CONTENT]';
     const TAG_END_PAGE_CONTENT = '[info]';
+    const TAG_TIMEOUT = '[TIMEOUT]';
 
     /** @var string[] */
     protected $output;
@@ -29,6 +30,21 @@ class Output
     public function __construct(array $casperConsoleOutput)
     {
         $this->output = $casperConsoleOutput;
+
+        if ($this->getErrors()) {
+            throw new \Exception('Something went wrong');
+        }
+    }
+
+    protected function getErrors()
+    {
+        foreach ($this->output as $line) {
+            if (strpos($line, static::TAG_TIMEOUT) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
