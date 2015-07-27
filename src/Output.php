@@ -87,6 +87,9 @@ class Output
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getCurrentUrl()
     {
         foreach ($this->output as $line) {
