@@ -50,4 +50,21 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 
         $output = new Output($casperOutput);
     }
+
+    public function testShouldReturnCurrentUrl()
+    {
+        $casperOutput = [
+            "[info] [phantom] Starting...",
+            "[info] [phantom] Running suite: 1 step",
+            "[debug] [phantom] Successfully injected Casper client-side utilities",
+            Output::TAG_CURRENT_URL . "http://someurl.something.com/",
+            Output::TAG_PAGE_CONTENT . "<html><head></head><body><pre style='word-wrap: break-word; white-space: pre-wrap;'>",
+            "[info] [phantom] Step anonymous 2/2: done in 266ms.",
+        ];
+        $expectedOutput = "http://someurl.something.com/";
+
+        $output = new Output($casperOutput);
+
+        $this->assertEquals($expectedOutput, $output->getCurrentUrl());
+    }
 }

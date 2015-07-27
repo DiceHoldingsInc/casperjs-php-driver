@@ -18,6 +18,7 @@ class Output
 {
     const TAG_INFO_PHANTOMJS = '[info] [phantom]';
     const TAG_PAGE_CONTENT = '[PAGE_CONTENT]';
+    const TAG_CURRENT_URL = '[CURRENT_URL]';
     const TAG_END_PAGE_CONTENT = '[info]';
     const TAG_TIMEOUT = '[TIMEOUT]';
 
@@ -84,5 +85,14 @@ class Output
         }
 
         return false;
+    }
+
+    public function getCurrentUrl()
+    {
+        foreach ($this->output as $line) {
+            if (strpos($line, static::TAG_CURRENT_URL) === 0) {
+                return $line = substr($line, strlen(static::TAG_PAGE_CONTENT) - 1);
+            }
+        }
     }
 }

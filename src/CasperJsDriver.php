@@ -54,6 +54,7 @@ casper.start().then(function() {
         $this->script .= "
 casper.run();
 casper.then(function() {
+    this.echo('" . Output::TAG_CURRENT_URL . "' + this.getCurrentUrl());
     this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
 });";
         $filename = '/tmp/php-casperjs-driver';
