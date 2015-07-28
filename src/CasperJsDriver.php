@@ -30,7 +30,8 @@ class CasperJsDriver
         $this->script .= "
 var casper = require('casper').create({
   verbose: true,
-  logLevel: 'debug'
+  logLevel: 'debug',
+  colorizerType: 'Dummy'
 });
 
 ";
@@ -57,7 +58,7 @@ casper.then(function() {
     this.echo('" . Output::TAG_CURRENT_URL . "' + this.getCurrentUrl());
     this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
 });";
-        $filename = '/tmp/php-casperjs-driver';
+        $filename = tempnam(null, 'php-casperjs-');
         file_put_contents($filename, $this->script);
 
         exec('casperjs ' . $filename . $this->optionBuilder->build(), $output);
