@@ -42,7 +42,7 @@ class Output
         foreach ($output as $line) {
             // checking for timeout or generic errors
             if ($this->getErrors($line)) {
-                throw new \Exception('Something went wrong');
+                throw new \Exception('Timeout while waiting for selector');
             }
 
             // current url
