@@ -23,26 +23,83 @@ class Output
     const TAG_TIMEOUT = '[TIMEOUT]';
 
     /** @var string[] */
-    protected $output;
+    protected $statusCode;
+    protected $html = '';
+    protected $currentUrl;
 
     /**
      * @param string[] $casperConsoleOutput
      */
     public function __construct(array $casperConsoleOutput)
     {
-        $this->output = $casperConsoleOutput;
+        $this->parseCasperJsOutput($casperConsoleOutput);
+    }
 
-        if ($this->getErrors()) {
-            throw new \Exception('Something went wrong');
+    protected function parseCasperJsOutput($output)
+    {
+        // saving html
+        $htmlStartingTagFound = false;
+        foreach ($output as $line) {
+            // checking for timeout or generic errors
+            if ($this->getErrors($line)) {
+                throw new \Exception('Something went wrong');
+            }
+
+            // current url
+            if ($currentUrl = $this->extractCurrentUrl($line)) {
+                $this->currentUrl = $currentUrl;
+            }
+
+            // status code
+            if ($statusCode = $this->extractStatusCode($line)) {
+                $this->statusCode = $statusCode;
+            }
+
+            if (strpos($line, static::TAG_PAGE_CONTENT) === 0) {
+                $htmlStartingTagFound = true;
+                $line = substr($line, strlen(static::TAG_PAGE_CONTENT));
+            }
+            if (strpos($line, static::TAG_END_PAGE_CONTENT) === 0 && $htmlStartingTagFound) {
+                break;
+            }
+            if ($htmlStartingTagFound) {
+                $this->html .= $line . PHP_EOL;
+            }
         }
     }
 
-    protected function getErrors()
+    protected function getErrors($line)
     {
-        foreach ($this->output as $line) {
-            if (strpos($line, static::TAG_TIMEOUT) === 0) {
-                return true;
+        if (strpos($line, static::TAG_TIMEOUT) === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $matches
+     * @return bool|int
+     */
+    protected function extractStatusCode($line)
+    {
+        if (strpos($line, static::TAG_INFO_PHANTOMJS) === 0) {
+            preg_match('~\(HTTP ([0-9]{3})\)~', $line, $matches);
+            if (!empty($matches[1])) {
+                return (int) $matches[1];
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    protected function extractCurrentUrl($line)
+    {
+        if (strpos($line, static::TAG_CURRENT_URL) === 0) {
+            return $line = substr($line, strlen(static::TAG_PAGE_CONTENT) - 1);
         }
 
         return false;
@@ -53,21 +110,7 @@ class Output
      */
     public function getHtml()
     {
-        $found = false;
-        $html = '';
-        foreach ($this->output as $line) {
-            if (strpos($line, static::TAG_PAGE_CONTENT) === 0) {
-                $found = true;
-                $line = substr($line, strlen(static::TAG_PAGE_CONTENT));
-            }
-            if (strpos($line, static::TAG_END_PAGE_CONTENT) === 0 && $found) {
-                break;
-            }
-            if ($found) {
-                $html .= $line . PHP_EOL;
-            }
-        }
-        return $html;
+        return $this->html;
     }
 
     /**
@@ -75,16 +118,7 @@ class Output
      */
     public function getStatusCode()
     {
-        foreach ($this->output as $line) {
-            if (strpos($line, static::TAG_INFO_PHANTOMJS) === 0) {
-                preg_match('~\(HTTP ([0-9]{3})\)~', $line, $matches);
-                if (!empty($matches[1])) {
-                    return (int) $matches[1];
-                }
-            }
-        }
-
-        return false;
+        return $this->statusCode;
     }
 
     /**
@@ -92,10 +126,6 @@ class Output
      */
     public function getCurrentUrl()
     {
-        foreach ($this->output as $line) {
-            if (strpos($line, static::TAG_CURRENT_URL) === 0) {
-                return $line = substr($line, strlen(static::TAG_PAGE_CONTENT) - 1);
-            }
-        }
+        return $this->currentUrl;
     }
 }
