@@ -38,10 +38,10 @@ class Output
     protected function parseCasperJsOutput($output)
     {
         // saving html
-        $htmlStartingTagFound = false;
+        $startRecordingHtml = false;
         foreach ($output as $line) {
             // checking for timeout or generic errors
-            if ($this->getErrors($line)) {
+            if ($this->timedOut($line)) {
                 throw new \Exception('Timeout while waiting for selector');
             }
 
@@ -56,19 +56,23 @@ class Output
             }
 
             if (strpos($line, static::TAG_PAGE_CONTENT) === 0) {
-                $htmlStartingTagFound = true;
+                $startRecordingHtml = true;
                 $line = substr($line, strlen(static::TAG_PAGE_CONTENT));
             }
-            if (strpos($line, static::TAG_END_PAGE_CONTENT) === 0 && $htmlStartingTagFound) {
-                break;
+            if (strpos($line, static::TAG_END_PAGE_CONTENT) === 0 && $startRecordingHtml) {
+                $startRecordingHtml = false;
             }
-            if ($htmlStartingTagFound) {
+            if ($startRecordingHtml) {
                 $this->html .= $line . PHP_EOL;
             }
         }
     }
 
-    protected function getErrors($line)
+    /**
+     * @param $line
+     * @return bool
+     */
+    protected function timedOut($line)
     {
         if (strpos($line, static::TAG_TIMEOUT) === 0) {
             return true;
@@ -78,8 +82,8 @@ class Output
     }
 
     /**
-     * @param $matches
-     * @return bool|int
+     * @param $line
+     * @return bool|int string with status code or false otherwise
      */
     protected function extractStatusCode($line)
     {
@@ -94,6 +98,7 @@ class Output
     }
 
     /**
+     * @param $line
      * @return string
      */
     protected function extractCurrentUrl($line)
