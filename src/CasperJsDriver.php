@@ -139,6 +139,14 @@ casper.wait(
         return $this;
     }
 
+    public function click($selector)
+    {
+        $this->script .= "
+casper.then(function() {
+    this.click('$selector');
+});";
+    }
+
     /**
      * Should only be used for testing purpose, until a "one day" refactor.
      *

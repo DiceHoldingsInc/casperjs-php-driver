@@ -32,7 +32,7 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
                          ->run();
     }
 
-    public function testUserAgentIsPresentInScript()
+    public function testBrowserInteractionIsBuiltProperly()
     {
         $expected = "
 var casper = require('casper').create({
@@ -65,14 +65,18 @@ casper.wait(
     function () {
         this.echo('" . Output::TAG_TIMEOUT . "');
     }
-);";
+);
+casper.then(function() {
+    this.click('.selector');
+});";
 
         $driver = new CasperJsDriver();
         $driver->setUserAgent('AmericanPizzaiolo')
             ->evaluate('make me a pizza')
             ->setViewPort(1024, 768)
             ->waitForSelector('.selector', 30000)
-            ->wait(10000);
+            ->wait(10000)
+            ->click('.selector');
         $this->assertEquals($expected, $driver->getScript());
     }
 
