@@ -139,6 +139,18 @@ casper.wait(
         return $this;
     }
 
+    public function setAcceptLanguage(array $langs)
+    {
+        if (!empty($langs)) {
+            $langs = (array) $langs;
+            $this->script .= "
+casper.page.customHeaders = {
+    'Accept-Language': '" . implode(',', $langs) . "'
+};";
+        }
+        return $this;
+    }
+
     /**
      * Should only be used for testing purpose, until a "one day" refactor.
      *
