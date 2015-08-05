@@ -22,10 +22,10 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
     public function testDriverShouldUseProxy()
     {
         $driver = $this->getMockBuilder('CasperJs\Driver\CasperJsDriver')
-            ->setMethods(['addOption'])
-            ->getMock();
+                       ->setMethods(['addOption'])
+                       ->getMock();
         $driver->expects($this->atLeastOnce())
-            ->method('addOption');
+               ->method('addOption');
 
         $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
                          ->useProxy('1.1.1.1')
@@ -42,6 +42,9 @@ var casper = require('casper').create({
 });
 
 casper.userAgent('AmericanPizzaiolo');
+casper.page.customHeaders = {
+    'Accept-Language': 'en-US'
+};
 casper.then(function() {
     casper.evaluate(function() {
         make me a pizza
@@ -72,11 +75,12 @@ casper.then(function() {
 
         $driver = new CasperJsDriver();
         $driver->setUserAgent('AmericanPizzaiolo')
-            ->evaluate('make me a pizza')
-            ->setViewPort(1024, 768)
-            ->waitForSelector('.selector', 30000)
-            ->wait(10000)
-            ->click('.selector');
+               ->click('.selector');
+               ->setAcceptLanguage(['en-US'])
+               ->evaluate('make me a pizza')
+               ->setViewPort(1024, 768)
+               ->waitForSelector('.selector', 30000)
+               ->wait(10000);
         $this->assertEquals($expected, $driver->getScript());
     }
 
@@ -93,7 +97,7 @@ casper.then(function() {
     public function testCrawlerShouldThrowExceptionWhenTimingOut()
     {
         $driver = new CasperJsDriver();
-        
+
         $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
             ->waitForSelector('.some-non-existent-selector', 100)
             ->run();

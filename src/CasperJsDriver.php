@@ -145,6 +145,20 @@ casper.wait(
 casper.then(function() {
     this.click('$selector');
 });";
+
+        return $this;
+    }
+
+    public function setAcceptLanguage(array $langs)
+    {
+        if (!empty($langs)) {
+            $langs = (array) $langs;
+            $this->script .= "
+casper.page.customHeaders = {
+    'Accept-Language': '" . implode(',', $langs) . "'
+};";
+        }
+        return $this;
     }
 
     /**
