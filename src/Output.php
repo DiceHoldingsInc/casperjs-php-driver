@@ -41,8 +41,8 @@ class Output
         $startRecordingHtml = false;
         foreach ($output as $line) {
             // checking for timeout or generic errors
-            if ($this->timedOut($line)) {
-                throw new \Exception('Timeout while waiting for selector');
+            if ($this->extractTimedOut($line)) {
+                throw new \Exception($line);
             }
 
             // current url
@@ -72,10 +72,10 @@ class Output
      * @param $line
      * @return bool
      */
-    protected function timedOut($line)
+    protected function extractTimedOut($line)
     {
         if (strpos($line, static::TAG_TIMEOUT) === 0) {
-            return true;
+            return $line = substr($line, strlen(static::TAG_TIMEOUT) - 1);
         }
 
         return false;

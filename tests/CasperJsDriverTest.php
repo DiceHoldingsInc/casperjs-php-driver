@@ -59,14 +59,14 @@ casper.waitForSelector(
         this.echo('found selector \".selector\"');
     },
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . "');
+        this.echo('" . Output::TAG_TIMEOUT . " $(.selector) not found after 30000 ms');
     },
     30000
 );
 casper.wait(
     10000,
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . "');
+        this.echo('" . Output::TAG_TIMEOUT . " after waiting 10000 ms');
     }
 );
 casper.then(function() {
@@ -75,12 +75,12 @@ casper.then(function() {
 
         $driver = new CasperJsDriver();
         $driver->setUserAgent('AmericanPizzaiolo')
-               ->click('.selector');
                ->setAcceptLanguage(['en-US'])
                ->evaluate('make me a pizza')
                ->setViewPort(1024, 768)
                ->waitForSelector('.selector', 30000)
-               ->wait(10000);
+               ->wait(10000)
+               ->click('.selector');
         $this->assertEquals($expected, $driver->getScript());
     }
 
@@ -93,6 +93,7 @@ casper.then(function() {
 
     /**
      * @expectedException \Exception
+     * @expectedExceptionMessage [TIMEOUT] $(.some-non-existent-selector) not found after 100 ms
      */
     public function testCrawlerShouldThrowExceptionWhenTimingOut()
     {
