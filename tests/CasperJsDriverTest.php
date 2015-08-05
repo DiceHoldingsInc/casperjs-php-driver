@@ -32,7 +32,7 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
                          ->run();
     }
 
-    public function testUserAgentIsPresentInScript()
+    public function testDriverWillProperlyBuildInteractionScript()
     {
         $expected = "
 var casper = require('casper').create({
