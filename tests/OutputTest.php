@@ -55,12 +55,13 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Exception
+     * @expectedExceptionMessage [TIMEOUT] Message example.
      */
-    public function testWillOutputExceptionForTimeout()
+    public function testWillOutputExceptionWithMessageForTimeout()
     {
         $casperOutput = [
             "[info] [phantom] Phantom is trolling me!",
-            Output::TAG_TIMEOUT,
+            Output::TAG_TIMEOUT . ' Message example.',
             Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
             "        <title>Simplest possible page</title>",
         ];

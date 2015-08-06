@@ -109,7 +109,7 @@ casper.waitForSelector(
         this.echo('found selector \"$selector\"');
     },
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . "');
+        this.echo('" . Output::TAG_TIMEOUT . " $($selector) not found after $timeout ms');
     },
     $timeout
 );";
@@ -133,7 +133,7 @@ casper.then(function () {
 casper.wait(
     $timeout,
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . "');
+        this.echo('" . Output::TAG_TIMEOUT . " after waiting $timeout ms');
     }
 );";
         return $this;
