@@ -158,6 +158,7 @@ casper.page.customHeaders = {
     'Accept-Language': '" . implode(',', $langs) . "'
 };";
         }
+
         return $this;
     }
 
