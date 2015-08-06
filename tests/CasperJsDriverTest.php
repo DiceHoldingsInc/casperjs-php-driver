@@ -43,7 +43,8 @@ var casper = require('casper').create({
 
 casper.userAgent('AmericanPizzaiolo');
 casper.page.customHeaders = {
-    'Accept-Language': 'en-US'
+    'Accept-Language': 'en-US',
+    'Some-Header': 'Foo-bar'
 };
 casper.then(function() {
     casper.evaluate(function() {
@@ -75,7 +76,10 @@ casper.then(function() {
 
         $driver = new CasperJsDriver();
         $driver->setUserAgent('AmericanPizzaiolo')
-               ->setAcceptLanguage(['en-US'])
+               ->setHeaders([
+                   'Accept-Language' => ['en-US'],
+                   'Some-Header' => 'Foo-bar',
+               ])
                ->evaluate('make me a pizza')
                ->setViewPort(1024, 768)
                ->waitForSelector('.selector', 30000)
@@ -84,18 +88,11 @@ casper.then(function() {
         $this->assertEquals($expected, $driver->getScript());
     }
 
-    public function testAddScript()
-    {
-        $driver = new CasperJsDriver();
-        $driver->evaluate('make me a pizza');
-        $this->assertContains('make me a pizza', $driver->getScript());
-    }
-
     /**
      * @expectedException \Exception
      * @expectedExceptionMessage [TIMEOUT] $(.some-non-existent-selector) not found after 100 ms
      */
-    public function testCrawlerShouldThrowExceptionWhenTimingOut()
+    public function testDriverShouldThrowExceptionWhenTimingOut()
     {
         $driver = new CasperJsDriver();
 

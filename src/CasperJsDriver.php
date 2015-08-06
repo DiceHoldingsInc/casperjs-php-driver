@@ -151,13 +151,30 @@ casper.then(function() {
 
     public function setAcceptLanguage(array $langs)
     {
-        if (!empty($langs)) {
-            $langs = (array) $langs;
-            $this->script .= "
+        $this->setHeaders([
+            'Accept-Language' => ['en-US'],
+        ]);
+
+        return $this;
+    }
+
+    public function setHeaders(array $headers)
+    {
+        $headersScript = "
 casper.page.customHeaders = {
-    'Accept-Language': '" . implode(',', $langs) . "'
-};";
+";
+
+        if (!empty($headers)) {
+            foreach ($headers as $header => $value) {
+                $headersScript .= "    '{$header}': '";
+                $headersScript .= (is_array($value)) ? implode(',', $value) : $value;
+                $headersScript .= (!empty(next($headers))) ? "',\n" : "'\n";
+            }
         }
+
+        $headersScript .= "};";
+
+        $this->script .= $headersScript;
 
         return $this;
     }
