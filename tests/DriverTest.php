@@ -1,15 +1,13 @@
 <?php
 
-namespace CasperJs\Driver;
-
 /**
  * @author jacopo.nardiello
  */
-class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
+class DriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver = new CasperJsDriver();
+        $this->driver = new CasperJs\Driver();
     }
 
     public function testDriverWillLoadSimplePage()
@@ -18,14 +16,14 @@ class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
         $output = $this->driver->start($fixturePath)
                                ->run();
 
-        $this->assertInstanceOf('\\CasperJs\\Driver\\Output', $output);
+        $this->assertInstanceOf('\\CasperJs\\Output', $output);
         $this->assertContains('Pizza with ketchup', $output->getHtml());
     }
 
 
     public function testDriverShouldUseProxy()
     {
-        $driver = $this->getMockBuilder('CasperJs\Driver\CasperJsDriver')
+        $driver = $this->getMockBuilder('CasperJs\Driver')
                        ->setMethods(['addOption'])
                        ->getMock();
         $driver->expects($this->atLeastOnce())
@@ -64,14 +62,14 @@ casper.waitForSelector(
         this.echo('found selector \".selector\"');
     },
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . " $(.selector) not found after 30000 ms');
+        this.echo('" . CasperJs\Output::TAG_TIMEOUT . " $(.selector) not found after 30000 ms');
     },
     30000
 );
 casper.wait(
     10000,
     function () {
-        this.echo('" . Output::TAG_TIMEOUT . " after waiting 10000 ms');
+        this.echo('" . CasperJs\Output::TAG_TIMEOUT . " after waiting 10000 ms');
     }
 );
 casper.then(function() {

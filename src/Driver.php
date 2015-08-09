@@ -6,15 +6,16 @@
  * (c) 2015 Work Digital
  */
 
-namespace CasperJs\Driver;
+namespace CasperJs;
 
+use CasperJs\Input\OptionsCliBuilder;
 
 /**
  * Class CasperJsDriver
  *
  * @author Fabrice Guery <fabrice@workdigital.co.uk>
  */
-class CasperJsDriver
+class Driver
 {
     /** @var string */
     protected $script = '';

@@ -6,7 +6,7 @@
  * (c) 2015 Work Digital
  */
 
-namespace CasperJs\Driver;
+namespace CasperJs\Input;
 
 
 /**
