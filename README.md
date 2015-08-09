@@ -61,6 +61,13 @@ $driver->run();
 
 Whenever you execute `Driver::run()` the `Driver` will return an `Output` object that will encapsulate the Casper output. `Output` will expose the captured casper data or throw an exception in case the desired behaviour wasn't performed (i.e. if a css selector to be present in the page after timeout expired).
 
+### Extracting Data
+```
+$html = $output->getHtml();
+$statusCode = $output->getStatusCode();
+$currentUrl = $output->getCurrentUrl();
+```
+
 ## More examples
 For more examples check out `test/DriverTest.php`
 
