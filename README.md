@@ -50,11 +50,10 @@ $output = $driver->run();
 ### Using a proxy for your call
 ```php
 $driver = new CasperJs\Driver();
-$output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
-                 ->useProxy('1.1.1.1')
-                 ->run();
+$driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+       ->useProxy('1.1.1.1');
 
-$driver->run();
+$output = $driver->run();
 ```
 
 ## Getting the Casper Output
