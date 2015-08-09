@@ -7,12 +7,16 @@ namespace CasperJs\Driver;
  */
 class CasperJsDriverTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->driver = new CasperJsDriver();
+    }
+
     public function testDriverWillLoadSimplePage()
     {
-        $driver = new CasperJsDriver();
-
-        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
-            ->run();
+        $fixturePath = 'file://' . __DIR__ . '/fixtures/simpleHtml.html';
+        $output = $this->driver->start($fixturePath)
+                               ->run();
 
         $this->assertInstanceOf('\\CasperJs\\Driver\\Output', $output);
         $this->assertContains('Pizza with ketchup', $output->getHtml());
@@ -74,18 +78,18 @@ casper.then(function() {
     this.click('.selector');
 });";
 
-        $driver = new CasperJsDriver();
-        $driver->setUserAgent('AmericanPizzaiolo')
-               ->setHeaders([
-                   'Accept-Language' => ['en-US'],
-                   'Some-Header' => 'Foo-bar',
-               ])
-               ->evaluate('make me a pizza')
-               ->setViewPort(1024, 768)
-               ->waitForSelector('.selector', 30000)
-               ->wait(10000)
-               ->click('.selector');
-        $this->assertEquals($expected, $driver->getScript());
+        $this->driver->setUserAgent('AmericanPizzaiolo')
+                     ->setHeaders([
+                         'Accept-Language' => ['en-US'],
+                         'Some-Header' => 'Foo-bar',
+                     ])
+                     ->evaluate('make me a pizza')
+                     ->setViewPort(1024, 768)
+                     ->waitForSelector('.selector', 30000)
+                     ->wait(10000)
+                     ->click('.selector');
+
+        $this->assertEquals($expected, $this->driver->getScript());
     }
 
     /**
@@ -94,10 +98,8 @@ casper.then(function() {
      */
     public function testDriverShouldThrowExceptionWhenTimingOut()
     {
-        $driver = new CasperJsDriver();
-
-        $output = $driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
-            ->waitForSelector('.some-non-existent-selector', 100)
-            ->run();
+        $output = $this->driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+                               ->waitForSelector('.some-non-existent-selector', 100)
+                               ->run();
     }
 }

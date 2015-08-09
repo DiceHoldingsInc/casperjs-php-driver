@@ -7,23 +7,28 @@ namespace CasperJs\Driver;
  */
 class OutputTest extends \PHPUnit_Framework_TestCase
 {
+    private function newOutput($casperConsoleOutput)
+    {
+        return new Output($casperConsoleOutput);
+    }
+
     public function testOutputWillExtractHtml()
     {
         $casperOutput = [
             Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
             "        <title>Simplest possible page</title>"
         ];
-
         $expectedOutput = "<!DOCTYPE html><html><head>\n" .
-            "        <title>Simplest possible page</title>\n";
-        $output = new Output($casperOutput);
+                          "        <title>Simplest possible page</title>\n";
+
+        $output = $this->newOutput($casperOutput);
 
         $this->assertEquals($expectedOutput, $output->getHtml());
     }
 
     public function testDriverShouldBeAbleToRetrieveStatusCode()
     {
-        $output = new Output([
+        $output = $this->newOutput([
             '[info] [phantom] Starting...',
             '[info] [phantom] Running suite: 2 steps',
             '[info] [phantom] Step anonymous 1/3: done in 37ms.',
@@ -45,10 +50,10 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             Output::TAG_PAGE_CONTENT . "<!DOCTYPE html><html><head>",
             "        <title>Simplest possible page</title>",
         ];
-
         $expectedOutput = "<!DOCTYPE html><html><head>\n" .
-            "        <title>Simplest possible page</title>\n";
-        $output = new Output($casperOutput);
+                          "        <title>Simplest possible page</title>\n";
+
+        $output = $this->newOutput($casperOutput);
 
         $this->assertEquals($expectedOutput, $output->getHtml());
     }
@@ -66,7 +71,7 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             "        <title>Simplest possible page</title>",
         ];
 
-        $output = new Output($casperOutput);
+        $output = $this->newOutput($casperOutput);
     }
 
     public function testShouldReturnCurrentUrl()
@@ -81,7 +86,7 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         ];
         $expectedOutput = "http://someurl.something.com/";
 
-        $output = new Output($casperOutput);
+        $output = $this->newOutput($casperOutput);
 
         $this->assertEquals($expectedOutput, $output->getCurrentUrl());
     }
