@@ -168,7 +168,8 @@ casper.page.customHeaders = {
             foreach ($headers as $header => $value) {
                 $headersScript .= "    '{$header}': '";
                 $headersScript .= (is_array($value)) ? implode(',', $value) : $value;
-                $headersScript .= (!empty(next($headers))) ? "',\n" : "'\n";
+                $next = next($headers);
+                $headersScript .= (!empty($next)) ? "',\n" : "'\n";
             }
         }
 
