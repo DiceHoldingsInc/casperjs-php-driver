@@ -46,6 +46,7 @@ var casper = require('casper').create({
 casper.userAgent('AmericanPizzaiolo');
 casper.page.customHeaders = {
     'Accept-Language': 'en-US',
+    'Some-Empty-Header': '',
     'Some-Header': 'Foo-bar'
 };
 casper.then(function() {
@@ -79,6 +80,7 @@ casper.then(function() {
         $this->driver->setUserAgent('AmericanPizzaiolo')
                      ->setHeaders([
                          'Accept-Language' => ['en-US'],
+                         'Some-Empty-Header' => '',
                          'Some-Header' => 'Foo-bar',
                      ])
                      ->evaluate('make me a pizza')

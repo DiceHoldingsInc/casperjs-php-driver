@@ -166,13 +166,16 @@ casper.page.customHeaders = {
 ";
 
         if (!empty($headers)) {
+            $headerLines = [];
             foreach ($headers as $header => $value) {
-                $headersScript .= "    '{$header}': '";
-                $headersScript .= (is_array($value)) ? implode(',', $value) : $value;
-                $next = next($headers);
-                $headersScript .= (!empty($next)) ? "',\n" : "'\n";
+                $headerLine = "    '{$header}': '";
+                $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
+                $headerLine .= "'";
+                $headerLines[] = $headerLine;
             }
+            $headersScript .= implode(",\n", $headerLines) . "\n";
         }
+
 
         $headersScript .= "};";
 
