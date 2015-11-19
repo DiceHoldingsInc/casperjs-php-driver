@@ -205,13 +205,9 @@ casper.page.customHeaders = {
         if (!function_exists('exec')) {
             return false;
         }
-        if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
-            // TODO find a way to test that, meanwhile just ignore.
-        } else {
-            exec('which ' . escapeshellarg($command), $output);
-            if (!$output) {
-                return false;
-            }
+        exec('which ' . escapeshellarg($command), $output);
+        if (!$output) {
+            return false;
         }
 
 
