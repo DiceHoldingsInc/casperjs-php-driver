@@ -10,6 +10,14 @@ class DriverTest extends \PHPUnit_Framework_TestCase
         $this->driver = new CasperJs\Driver();
     }
 
+    /**
+     * @expectedException \Exception
+     */
+    public function testDriverThrowExceptionOnInvalidCommand()
+    {
+        $driver = new CasperJs\Driver('unexistantCommand');
+    }
+
     public function testDriverWillLoadSimplePage()
     {
         $fixturePath = 'file://' . __DIR__ . '/fixtures/simpleHtml.html';

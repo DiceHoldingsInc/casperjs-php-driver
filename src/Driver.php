@@ -25,8 +25,14 @@ class Driver
 
     protected $jsInteraction;
 
-    public function __construct()
+    public function __construct($casperJsCommandPath = 'casperjs')
     {
+        if (!$this->isCommandExecutable($casperJsCommandPath)) {
+            throw new \Exception(
+                'Unable to execute ' . $casperJsCommandPath . '. '
+                . 'Ensure file exists in $PATH and exec() function is available.'
+            );
+        }
         $this->optionBuilder = new OptionsCliBuilder();
         $this->script .= "
 var casper = require('casper').create({
@@ -192,5 +198,19 @@ casper.page.customHeaders = {
     public function getScript()
     {
         return $this->script;
+    }
+
+    protected function isCommandExecutable($command)
+    {
+        if (!function_exists('exec')) {
+            return false;
+        }
+        exec('which ' . escapeshellarg($command), $output);
+        if (!$output) {
+            return false;
+        }
+
+
+        return true;
     }
 }
