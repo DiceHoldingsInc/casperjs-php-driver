@@ -91,6 +91,34 @@ casper.then(function() {
     }
 
     /**
+     * We must ignore the gzip encoding as this is not currently supported by casperjs/phantomjs. Might be supported
+     * with phantom2.0 and the new version of casperjs.
+     */
+    public function testDriverShouldIgnoreAcceptEncodingHeader()
+    {
+        $inputHeaders = [
+            'Accept-Language' => ['en-US'],
+            'Some-Header' => 'Foo-bar',
+            'Accept-Encoding' => 'gzip,deflate,sdch',
+        ];
+        $expectedScript = "
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug',
+  colorizerType: 'Dummy'
+});
+
+
+casper.page.customHeaders = {
+    'Accept-Language': 'en-US',
+    'Some-Header': 'Foo-bar',
+};";
+        $this->driver->setHeaders($inputHeaders);
+
+        $this->assertEquals($expectedScript, $this->driver->getScript());
+    }
+
+    /**
      * @expectedException \Exception
      * @expectedExceptionMessage [TIMEOUT] $(.some-non-existent-selector) not found after 100 ms
      */

@@ -167,6 +167,10 @@ casper.page.customHeaders = {
 
         if (!empty($headers)) {
             foreach ($headers as $header => $value) {
+                // Current version of casperjs will not decode gzipped output
+                if ($header == 'Accept-Encoding') {
+                    continue;
+                }
                 $headersScript .= "    '{$header}': '";
                 $headersScript .= (is_array($value)) ? implode(',', $value) : $value;
                 $next = next($headers);
