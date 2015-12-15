@@ -10,6 +10,14 @@ class DriverTest extends \PHPUnit_Framework_TestCase
         $this->driver = new CasperJs\Driver();
     }
 
+    /**
+     * @expectedException \Exception
+     */
+    public function testDriverThrowExceptionOnInvalidCommand()
+    {
+        $driver = new CasperJs\Driver('unexistantCommand');
+    }
+
     public function testDriverWillLoadSimplePage()
     {
         $fixturePath = 'file://' . __DIR__ . '/fixtures/simpleHtml.html';
@@ -46,6 +54,7 @@ var casper = require('casper').create({
 casper.userAgent('AmericanPizzaiolo');
 casper.page.customHeaders = {
     'Accept-Language': 'en-US',
+    'Some-Empty-Header': '',
     'Some-Header': 'Foo-bar'
 };
 casper.then(function() {
@@ -79,6 +88,7 @@ casper.then(function() {
         $this->driver->setUserAgent('AmericanPizzaiolo')
                      ->setHeaders([
                          'Accept-Language' => ['en-US'],
+                         'Some-Empty-Header' => '',
                          'Some-Header' => 'Foo-bar',
                      ])
                      ->evaluate('make me a pizza')
@@ -111,7 +121,7 @@ var casper = require('casper').create({
 
 casper.page.customHeaders = {
     'Accept-Language': 'en-US',
-    'Some-Header': 'Foo-bar',
+    'Some-Header': 'Foo-bar'
 };";
         $this->driver->setHeaders($inputHeaders);
 

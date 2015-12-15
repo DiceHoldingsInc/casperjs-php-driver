@@ -21,6 +21,8 @@ class OptionsCliBuilder
     /**
      * @param string $optionName
      * @param string $optionValue
+     *
+     * @return $this
      **/
     public function addOption($optionName, $optionValue)
     {
