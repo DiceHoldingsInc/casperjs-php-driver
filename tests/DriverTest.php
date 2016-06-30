@@ -5,6 +5,9 @@
  */
 class DriverTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Casperjs\Driver */
+    protected $driver;
+
     public function setUp()
     {
         $this->driver = new CasperJs\Driver();
@@ -62,6 +65,19 @@ casper.then(function() {
         make me a pizza
     });
 });
+casper.options.stepTimeout = 1000;
+
+casper.options.onResourceRequested = function(casper, requestData, request) {
+    if ((/\.css($|\?v=[a-z0-9]+$)/gi).test(requestData.url)) {
+        console.log(\"SKIPPING\" + requestData.url);
+        request.abort();
+    }
+}
+
+casper.pageSettings.loadImages = false;
+
+casper.pageSettings.loadPlugins = false;
+
 casper.then(function () {
     this.viewport(1024, 768);
 });
@@ -92,12 +108,32 @@ casper.then(function() {
                          'Some-Header' => 'Foo-bar',
                      ])
                      ->evaluate('make me a pizza')
+                     ->setStepTimeout(1000)
+                     ->setRequestsToSkip(['/\.css($|\?v=[a-z0-9]+$)/gi'])
+                     ->disableImageLoading()
+                     ->disablePluginLoading()
                      ->setViewPort(1024, 768)
                      ->waitForSelector('.selector', 30000)
                      ->wait(10000)
                      ->click('.selector');
 
         $this->assertEquals($expected, $this->driver->getScript());
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testCaptureWillThrowExceptionIfFileNotWritable()
+    {
+        $this->driver->capture('/path/to/file/that/doesnt/exists');
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testCaptureWillThrowExceptionIfFileIsDirectory()
+    {
+        $this->driver->capture(sys_get_temp_dir());
     }
 
     /**
@@ -137,5 +173,16 @@ casper.page.customHeaders = {
         $output = $this->driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
                                ->waitForSelector('.some-non-existent-selector', 100)
                                ->run();
+    }
+
+    public function testCaptureGeneratesAnImage()
+    {
+        $path = sys_get_temp_dir() . '/casper-test-image.png';
+        $output = $this->driver->start('file://' . __DIR__ . '/fixtures/simpleHtml.html')
+            ->capture($path)
+            ->run();
+        $this->assertFileExists($path);
+
+        unlink($path);
     }
 }

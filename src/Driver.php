@@ -194,6 +194,97 @@ casper.page.customHeaders = {
         return $this;
     }
 
+
+    /**
+     * Disable images loading to save a bit of bandwidth/speed.
+     * @return $this
+     */
+    public function disableImageLoading()
+    {
+        $this->script .= '
+casper.pageSettings.loadImages = false;
+';
+        return $this;
+    }
+
+    /**
+     * Disable plugin loading to save a bit of bandwidth/speed.
+     * @return $this
+     */
+    public function disablePluginLoading()
+    {
+        $this->script .= '
+casper.pageSettings.loadPlugins = false;
+';
+        return $this;
+    }
+
+    /**
+     * Define a timeout in ms for each casper step.
+     * It's used as an attempt to fix some crawls "hanging"
+     *
+     * @param int $timeout
+     * @return $this
+     */
+    public function setStepTimeout($timeout = 30000)
+    {
+        $this->script .= '
+casper.options.stepTimeout = ' . $timeout .';
+';
+        return $this;
+    }
+
+    /**
+     * Avoid to trigger requests that match certain URLs.
+     * Useful, for example, to avoid triggering requests to GoogleAnalytics, CSS etc.
+     *
+     * @param string[] $urlJsRegexes
+     * @return $this
+     */
+    public function setRequestsToSkip($urlJsRegexes)
+    {
+        $this->script .= '
+casper.options.onResourceRequested = function(casper, requestData, request) {';
+
+        foreach ($urlJsRegexes as $regex) {
+            $this->script .= '
+    if ((' . $regex . ').test(requestData.url)) {
+        console.log("SKIPPING " + requestData.url);
+        request.abort();
+    }
+';
+        }
+        $this->script .= '}
+';
+
+        return $this;
+    }
+
+    /**
+     * @param string $imagePath
+     * @return $this
+     * @throws \Exception
+     */
+    public function capture($imagePath)
+    {
+        if (is_dir($imagePath)) {
+            throw new \Exception('Unable to open ' . $imagePath);
+        }
+        $file = @fopen($imagePath, 'w');
+        if (!$file) {
+            throw new \Exception('Unable to open ' . $imagePath);
+        }
+        fclose($file);
+
+        $this->script .= '
+casper.then(function() {
+    this.capture(\'' . $imagePath . '\');
+});
+';
+
+        return $this;
+    }
+
     /**
      * Should only be used for testing purpose, until a "one day" refactor.
      *
