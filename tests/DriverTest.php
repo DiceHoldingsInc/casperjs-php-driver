@@ -69,14 +69,14 @@ casper.options.stepTimeout = 1000;
 
 casper.options.onResourceRequested = function(casper, requestData, request) {
     if ((/\.css($|\?v=[a-z0-9]+$)/gi).test(requestData.url)) {
-        console.log(\"SKIPPING\" + requestData.url);
+        console.log(\"SKIPPING \" + requestData.url);
         request.abort();
     }
 }
 
-casper.pageSettings.loadImages = false;
+casper.options.pageSettings.loadImages = false;
 
-casper.pageSettings.loadPlugins = false;
+casper.options.pageSettings.loadPlugins = false;
 
 casper.then(function () {
     this.viewport(1024, 768);
