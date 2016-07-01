@@ -202,7 +202,7 @@ casper.page.customHeaders = {
     public function disableImageLoading()
     {
         $this->script .= '
-casper.pageSettings.loadImages = false;
+casper.options.pageSettings.loadImages = false;
 ';
         return $this;
     }
@@ -214,7 +214,7 @@ casper.pageSettings.loadImages = false;
     public function disablePluginLoading()
     {
         $this->script .= '
-casper.pageSettings.loadPlugins = false;
+casper.options.pageSettings.loadPlugins = false;
 ';
         return $this;
     }
