@@ -24,6 +24,8 @@ class Driver
     protected $optionBuilder;
 
     protected $jsInteraction;
+    
+    protected $casperJsCommandPath;
 
     public function __construct($casperJsCommandPath = 'casperjs')
     {
@@ -33,6 +35,9 @@ class Driver
                 . 'Ensure file exists in $PATH and exec() function is available.'
             );
         }
+        
+        $this->casperJsCommandPath = $casperJsCommandPath;
+        
         $this->optionBuilder = new OptionsCliBuilder();
         $this->script .= "
 var casper = require('casper').create({
@@ -68,7 +73,7 @@ casper.then(function() {
         $filename = tempnam(null, 'php-casperjs-');
         file_put_contents($filename, $this->script);
 
-        exec('casperjs ' . $filename . $this->optionBuilder->build(), $output);
+        exec($this->casperJsCommandPath . ' ' . $filename . $this->optionBuilder->build(), $output);
         unlink($filename);
 
         return new Output($output);
