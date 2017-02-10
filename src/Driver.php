@@ -161,6 +161,18 @@ casper.then(function() {
         return $this;
     }
 
+    public function clickXpath($selector)
+    {
+        $this->script .= "
+var x = require('casper').selectXpath;
+
+casper.then(function() {
+    this.click(x('$selector'));
+});";
+
+        return $this;
+    }
+
     public function setAcceptLanguage(array $langs = ['en-US'])
     {
         $this->setHeaders([
