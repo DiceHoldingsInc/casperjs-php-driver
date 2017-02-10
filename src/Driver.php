@@ -164,7 +164,7 @@ casper.then(function() {
     public function clickXpath($selector)
     {
         $this->script .= "
-var x = require('casper').selectXpath;
+var x = require('casper').selectXPath;
 
 casper.then(function() {
     this.click(x('$selector'));

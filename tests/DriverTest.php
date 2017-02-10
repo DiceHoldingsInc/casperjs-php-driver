@@ -232,7 +232,7 @@ var casper = require('casper').create({
 });
 
 
-var x = require('casper').selectXpath;
+var x = require('casper').selectXPath;
 
 casper.then(function() {
     this.click(x('//div[@id=\"mySelector\"]'));
