@@ -186,7 +186,7 @@ casper.page.customHeaders = {
         unlink($path);
     }
 
-    public function testInterationWithAcceptLanguage()
+    public function testInteractionWithAcceptLanguage()
     {
         $expected = "
 var casper = require('casper').create({
@@ -204,7 +204,7 @@ casper.page.customHeaders = {
         $this->assertEquals($expected, $this->driver->getScript());
     }
 
-    public function testInterationWithClick()
+    public function testInteractionWithClick()
     {
         $expected = "
 var casper = require('casper').create({
@@ -222,7 +222,7 @@ casper.then(function() {
         $this->assertEquals($expected, $this->driver->getScript());
     }
 
-    public function testInterationWithXpathClick()
+    public function testInteractionWithXpathClick()
     {
         $expected = "
 var casper = require('casper').create({
