@@ -173,8 +173,12 @@ casper.then(function() {
         return $this;
     }
 
-    public function setAcceptLanguage(array $langs = ['en-US'])
+    public function setAcceptLanguage(array $langs = [])
     {
+        if (empty($langs)) {
+            $langs = ['en-US'];
+        }
+
         $this->setHeaders([
             'Accept-Language' => $langs,
         ]);
