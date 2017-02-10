@@ -185,4 +185,60 @@ casper.page.customHeaders = {
 
         unlink($path);
     }
+
+    public function testInterationWithAcceptLanguage()
+    {
+        $expected = "
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug',
+  colorizerType: 'Dummy'
+});
+
+
+casper.page.customHeaders = {
+    'Accept-Language': 'en-GB'
+};";
+
+        $this->driver->setAcceptLanguage(['en-GB']);
+        $this->assertEquals($expected, $this->driver->getScript());
+    }
+
+    public function testInterationWithClick()
+    {
+        $expected = "
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug',
+  colorizerType: 'Dummy'
+});
+
+
+casper.then(function() {
+    this.click('#mySelector');
+});";
+
+        $this->driver->click('#mySelector');
+        $this->assertEquals($expected, $this->driver->getScript());
+    }
+
+    public function testInterationWithXpathClick()
+    {
+        $expected = "
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug',
+  colorizerType: 'Dummy'
+});
+
+
+var x = require('casper').selectXpath;
+
+casper.then(function() {
+    this.click(x('//div[@id=\"mySelector\"]'));
+});";
+
+        $this->driver->clickXpath('//div[@id="mySelector"]');
+        $this->assertEquals($expected, $this->driver->getScript());
+    }
 }
