@@ -321,6 +321,10 @@ casper.then(function() {
         if (!function_exists('exec')) {
             return false;
         }
+
+        // If we pass extra params to the command, only check the command itself
+        list($command) = explode(' ', $command);
+
         exec('which ' . escapeshellarg($command), $output);
         if (!$output) {
             return false;
