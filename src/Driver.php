@@ -161,10 +161,26 @@ casper.then(function() {
         return $this;
     }
 
-    public function setAcceptLanguage(array $langs)
+    public function clickXpath($selector)
     {
+        $this->script .= "
+var x = require('casper').selectXPath;
+
+casper.then(function() {
+    this.click(x('$selector'));
+});";
+
+        return $this;
+    }
+
+    public function setAcceptLanguage(array $langs = [])
+    {
+        if (empty($langs)) {
+            $langs = ['en-US'];
+        }
+
         $this->setHeaders([
-            'Accept-Language' => ['en-US'],
+            'Accept-Language' => $langs,
         ]);
 
         return $this;
@@ -305,6 +321,10 @@ casper.then(function() {
         if (!function_exists('exec')) {
             return false;
         }
+
+        // If we pass extra params to the command, only check the command itself
+        list($command) = explode(' ', $command);
+
         exec('which ' . escapeshellarg($command), $output);
         if (!$output) {
             return false;
