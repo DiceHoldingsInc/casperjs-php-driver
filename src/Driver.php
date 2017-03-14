@@ -68,6 +68,7 @@ casper.start().then(function() {
 casper.run();
 casper.then(function() {
     this.echo('" . Output::TAG_CURRENT_URL . "' + this.getCurrentUrl());
+    this.echo('" . Output::TAG_PAGE_HEADERS . "' + JSON.stringify(this.currentResponse.headers));
     this.echo('" . Output::TAG_PAGE_CONTENT . "' + this.getHTML());
 });";
         $filename = tempnam(null, 'php-casperjs-');

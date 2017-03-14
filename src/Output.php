@@ -17,6 +17,7 @@ namespace CasperJs;
 class Output
 {
     const TAG_INFO_PHANTOMJS = '[info] [phantom]';
+    const TAG_PAGE_HEADERS = '[PAGE_HEADERS]';
     const TAG_PAGE_CONTENT = '[PAGE_CONTENT]';
     const TAG_CURRENT_URL = '[CURRENT_URL]';
     const TAG_END_PAGE_CONTENT = '[info]';
@@ -26,6 +27,7 @@ class Output
     protected $statusCode;
     protected $html = '';
     protected $currentUrl;
+    protected $headers = [];
 
     /**
      * @param string[] $casperConsoleOutput
@@ -53,6 +55,11 @@ class Output
             // status code
             if ($statusCode = $this->extractStatusCode($line)) {
                 $this->statusCode = $statusCode;
+            }
+
+            // headers
+            if ($headers = $this->extractHeaders($line)) {
+                $this->headers = $headers;
             }
 
             if (strpos($line, static::TAG_PAGE_CONTENT) === 0) {
@@ -111,6 +118,32 @@ class Output
     }
 
     /**
+     * @param $line
+     * @return bool|array
+     */
+    protected function extractHeaders($line)
+    {
+        if (strpos($line, static::TAG_PAGE_HEADERS) !== 0) {
+            return false;
+        }
+
+        $line = substr($line, strlen(static::TAG_PAGE_HEADERS));
+        $headersRaw = json_decode($line, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return false;
+        }
+
+        // Tidy up the format to be name => value pairs
+        $headers = [];
+        foreach ($headersRaw as $v) {
+            if (!empty($v['name']) && !empty($v['value'])) {
+                $headers[$v['name']] = $v['value'];
+            }
+        }
+        return $headers;
+    }
+
+    /**
      * @return string
      */
     public function getHtml()
@@ -132,5 +165,13 @@ class Output
     public function getCurrentUrl()
     {
         return $this->currentUrl;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }
