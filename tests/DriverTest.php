@@ -39,6 +39,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\\CasperJs\\Output', $output);
         $this->assertNotContains('placeholder', $output->getHtml());
+        $this->assertContains('<div id="target">unless', $output->getHtml());
     }
 
 
