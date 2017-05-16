@@ -31,6 +31,17 @@ class DriverTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Pizza with ketchup', $output->getHtml());
     }
 
+    public function testDriverWillExecuteJavascript()
+    {
+        $fixturePath = 'file://' . __DIR__ . '/fixtures/simpleHtmlJs.html';
+        $output = $this->driver->start($fixturePath)
+            ->run();
+
+        $this->assertInstanceOf('\\CasperJs\\Output', $output);
+        $this->assertNotContains('placeholder', $output->getHtml());
+        $this->assertContains('<div id="target">unless', $output->getHtml());
+    }
+
 
     public function testDriverShouldUseProxy()
     {
