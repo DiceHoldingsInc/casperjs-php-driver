@@ -1,6 +1,12 @@
 language: php
 php:
   - 5.4
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y firefox
+
 before_script:
-  - npm install -g casperjs
+  - export SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
+  - npm install -g casperjs slimerjs
   - composer install  

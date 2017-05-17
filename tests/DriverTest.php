@@ -10,7 +10,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->driver = new CasperJs\Driver();
+        $this->driver = new CasperJs\Driver('xvfb-run casperjs --engine=slimerjs');
     }
 
     /**
