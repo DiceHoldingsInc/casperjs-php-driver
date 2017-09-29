@@ -94,6 +94,12 @@ casper.then(function() {
         return $this;
     }
 
+    public function useProxyAuth($username, $password)
+    {
+        $this->addOption('proxy-auth', $username . ':' . $password);
+        return $this;
+    }
+
     public function setUserAgent($userAgent)
     {
         $this->script .= "casper.userAgent('$userAgent');";
